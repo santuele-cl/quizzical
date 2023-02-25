@@ -1,0 +1,10 @@
+*,*::before,*::after {
+    box-sizing: border-box;
+    font-family: 'Karla', sans-serif;
+}
+
+.App {
+    background: url('light-blue.svg') bottom left no-repeat, url('orange-bg.svg') right top no-repeat, #F5F7FB;
+    background-size: 20%;
+}
+
