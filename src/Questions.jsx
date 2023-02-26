@@ -7,41 +7,53 @@ const Questions = () => {
     const [quizData, setQuizData] = useState({score: 0, questions: []})
     const [hasQuizStarted, setHasQuizStarted] = useState(false)
     const [hasFinishedAnswering, setHasFinishedAnswering] = useState(false)
+    const [willPlayAgain, setWillPlayAgain] = useState(false)
 
-    console.log(quizData)
+    // console.log(quizData)
 
     useEffect(() => {
         async function getQuizData() {
             const res = await fetch("https://opentdb.com/api.php?amount=10&type=multiple")
             const data = await res.json()
-            const filteredQuestions = data.results.map( datum => {
+            const filteredData = data.results.map( datum => {
+                // Listing and decoding of choices with the correct answer
+                const choices = [
+                    {
+                        key:decode(datum.correct_answer),
+                        isHeld: false
+                    }, 
+                    ...datum.incorrect_answers.map(incAns => {
+                        return {
+                            key: decode(incAns),
+                            isHeld: false
+                        }
+                    })
+                ]
+
+                // Randomizing the choices and pushing it to the new 'randomChoices' array
+                const randomChoices = []
+                while(choices.length) {
+                    const randomIndex = Math.floor(Math.random() * choices.length)
+                    const randomChoice = choices.splice(randomIndex,1)[0]
+                    randomChoices.push(randomChoice)
+                }
+
                 return {
                     id: nanoid(),
                     question: decode(datum.question),
                     correctAnswer: decode(datum.correct_answer),
                     answer: '',
-                    choices: [
-                            {
-                                key:decode(datum.correct_answer),
-                                isHeld: false
-                            }, 
-                            ...datum.incorrect_answers.map(incAns => {
-                                return {
-                                    key: decode(incAns),
-                                    isHeld: false
-                                }
-                            })
-                        ]
+                    choices: [...randomChoices]
                 }
             })
-            const newQuizData = {score: 0, questions: [...filteredQuestions]}
+            const newQuizData = {score: 0, questions: [...filteredData]}
             setQuizData(newQuizData)
         }
         getQuizData()
-    }, [])
+    }, [willPlayAgain])
 
     function handleChoiceClick(questionId,choice) {
-        console.log(`handleChoiceClick triggered: ${questionId} ${choice}`)
+        // console.log(`handleChoiceClick triggered: ${questionId} ${choice}`)
         const updatedArray = quizData.questions.map( question => {
             return question.id === questionId ? 
                 {   ...question,
@@ -65,33 +77,7 @@ const Questions = () => {
 
     function handlePlayAgain() {
         setHasFinishedAnswering(false)
-        async function getQuizData() {
-            const res = await fetch("https://opentdb.com/api.php?amount=10&type=multiple")
-            const data = await res.json()
-            const filteredQuestions = data.results.map( datum => {
-                return {
-                    id: nanoid(),
-                    question: decode(datum.question),
-                    correctAnswer: decode(datum.correct_answer),
-                    answer: '',
-                    choices: [
-                            {
-                                key:decode(datum.correct_answer),
-                                isHeld: false
-                            }, 
-                            ...datum.incorrect_answers.map(incAns => {
-                                return {
-                                    key: decode(incAns),
-                                    isHeld: false
-                                }
-                            })
-                        ]
-                }
-            })
-            const newQuizData = {score: 0, questions: [...filteredQuestions]}
-            setQuizData(newQuizData)
-        }
-        getQuizData()
+        setWillPlayAgain(prevState => !prevState)
     }
     
     function handleCheckAnswer() {
@@ -112,9 +98,15 @@ const Questions = () => {
     }
 
     const questionsElements = quizData.questions.map(item => {
-        return <Question key={item.id} {...item} handleChoiceClick={handleChoiceClick}/>
+        return <Question key={item.id} {...item} hasFinishedAnswering={hasFinishedAnswering} handleChoiceClick={handleChoiceClick}/>
     })
     
+    function handleQuitClick() {
+        setHasQuizStarted(false)
+        setHasFinishedAnswering(false)
+        setWillPlayAgain(prevState => !prevState)
+    }
+
     function handleStartClick() {
         setHasQuizStarted(prevState => !prevState)
     }
@@ -130,7 +122,7 @@ const Questions = () => {
                             <div className='flex my-10 flex-col lg:flex-row gap-2 lg:gap-4 items-center justify-center'>
                                 <p className='text-darkIndigo text-2xl font-bold'>You scored {quizData.score}/10 correct answers</p>
                                 <button className='btn m-0 lg:my-10 lg:ml-4 text-xl py-3 px-8 ' onClick={handlePlayAgain}>Play again</button>
-                                <button className='btn invertedBtn m-0 lg:my-10 text-xl py-3 px-8' onClick={handleStartClick}>Quit</button>
+                                <button className='btn invertedBtn m-0 lg:my-10 text-xl py-3 px-8' onClick={handleQuitClick}>Quit</button>
                             </div>
                             :
                             <button className='btn text-xl py-3 px-8' onClick={handleCheckAnswer}>Check answers</button>

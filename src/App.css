@@ -35,10 +35,18 @@
 }
 
 .choiceIsHeld {
-    @apply text-darkIndigo bg-lightBlue border-0 font-bold
+    @apply text-darkIndigo bg-lightBlue border-lightBlue font-bold
 }
 
 .choice:hover,
 .choice:active {
     @apply text-white bg-defaultIndigo
+}
+
+.correct {
+    @apply bg-lightGreen border-lightGreen font-bold
+}
+
+.wrong {
+    @apply text-defaultIndigo bg-lightRed border-lightRed font-bold
 }
