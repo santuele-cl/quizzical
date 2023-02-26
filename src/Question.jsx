@@ -1,0 +1,26 @@
+import { nanoid } from 'nanoid'
+
+const Question = (props) => {
+    const {question,choices,handleChoiceClick,id} = props
+    const choicesElement = choices.map(choice => {
+        return (
+            <span 
+                key={nanoid()}
+                className={`choice ${choice.isHeld ? 'choiceIsHeld' : ''}`}
+                onClick={() => handleChoiceClick(id,choice.key)}
+            >
+                {choice.key}
+            </span>
+        )
+    })
+    return (  
+        <div className='flex flex-col gap-6 text-left text-darkIndigo py-8 [&:not(div:last-of-type)]:border-b-2 border-lightBlue'>
+            <p className='font-bold text-3xl'>{question}</p>
+            <div className='flex flex-col gap-4 md:items-center md:flex-row'>
+                {choicesElement}
+            </div>
+        </div>
+    );
+}
+ 
+export default Question;

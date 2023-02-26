@@ -3,8 +3,42 @@
     font-family: 'Karla', sans-serif;
 }
 
-.App {
+.app {
     background: url('light-blue.svg') bottom left no-repeat, url('orange-bg.svg') right top no-repeat, #F5F7FB;
     background-size: 20%;
 }
 
+.main {
+    @apply max-w-4xl w-10/12 mx-auto min-h-screen grid place-items-center text-center text-defaultIndigo
+}
+
+.btn {
+    @apply my-10 rounded-2xl text-white bg-defaultIndigo border-2 border-defaultIndigo transition-all
+}
+
+.btn:hover,
+.btn:active {
+    @apply text-darkIndigo bg-white
+}
+
+.invertedBtn {
+    @apply bg-white text-defaultIndigo
+}
+
+.invertedBtn:hover,
+.invertedBtn:active {
+    @apply text-white bg-darkIndigo
+}
+
+.choice {
+    @apply rounded-3xl py-2 px-8 border-2 border-defaultIndigo text-xl leading-tight text-center transition-all cursor-pointer
+}
+
+.choiceIsHeld {
+    @apply text-darkIndigo bg-lightBlue border-0 font-bold
+}
+
+.choice:hover,
+.choice:active {
+    @apply text-white bg-defaultIndigo
+}
