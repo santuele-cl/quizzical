@@ -9,7 +9,7 @@ const Questions = () => {
     const [hasFinishedAnswering, setHasFinishedAnswering] = useState(false)
     const [willPlayAgain, setWillPlayAgain] = useState(false)
 
-    // console.log(quizData)
+    console.log(quizData)
 
     useEffect(() => {
         async function getQuizData() {
@@ -81,20 +81,36 @@ const Questions = () => {
     }
     
     function handleCheckAnswer() {
-        let correctAns = 0 
-        quizData.questions.forEach(question => {
-            if(question.answer === question.correctAnswer) {
-                correctAns++
-            } else {
-            }
-        })
-        setQuizData(prevState => {
-            return {
-                ...prevState,
-                score: correctAns
-            }
-        })
-        setHasFinishedAnswering(true)
+        // Checking if all questions has been answered
+        // const arrayOfIsHeld = []
+        // for(let i=0;i<quizData.questions.length;i++) {
+        //     arrayOfIsHeld.push(!quizData.questions[i].choices.every(choice => !choice.isHeld))
+        // }
+        // const isAllQuestionsAsnwered = arrayOfIsHeld.every(isHeld => isHeld)
+        
+        const isAllQuestionsAsnwered = quizData.questions.map(question => {
+            return !question.choices.every(choice => !choice.isHeld)
+        }).every(isHeld => isHeld)
+
+        if(isAllQuestionsAsnwered) {
+            let correctAns = 0 
+            quizData.questions.forEach(question => {
+                if(question.answer === question.correctAnswer) {
+                    correctAns++
+                } else {
+                }
+            })
+            setQuizData(prevState => {
+                return {
+                    ...prevState,
+                    score: correctAns
+                }
+            })
+            setHasFinishedAnswering(true)
+        } else {
+            alert('Not all questions are answered!')
+        }
+        
     }
 
     const questionsElements = quizData.questions.map(item => {

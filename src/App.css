@@ -47,6 +47,6 @@
     @apply bg-lightGreen border-lightGreen font-bold
 }
 
-.wrong {
+.incorrect {
     @apply text-defaultIndigo bg-lightRed border-lightRed font-bold
 }

@@ -1,7 +1,6 @@
 import { nanoid } from 'nanoid'
 
 const Question = (props) => {
-    console.log(props)
     const {question,choices,handleChoiceClick,id,correctAnswer, hasFinishedAnswering} = props
 
     const choicesElement = choices.map(choice => {
@@ -16,8 +15,7 @@ const Question = (props) => {
                     `choice 
                     ${choice.isHeld ? 'choiceIsHeld' : ''} 
                     ${isAnswerKey && isFinished ? 'correct': ''}
-                    ${isAnswerKey && isFinished ? 'correct': ''}
-                    ${isAnswer && !isAnswerKey && isFinished ? 'wrong' : ''}
+                    ${isAnswer && !isAnswerKey && isFinished ? 'incorrect' : ''}
                     `
                 }
                 onClick={() => handleChoiceClick(id,choice.key)}
