@@ -4,7 +4,7 @@
 }
 
 .app {
-    background: url('light-blue.svg') bottom left no-repeat, url('orange-bg.svg') right top no-repeat, #F5F7FB;
+    background: url('/light-blue.svg') bottom left no-repeat, url('/orange-bg.svg') right top no-repeat, #F5F7FB;
     background-size: 20%;
 }
 
