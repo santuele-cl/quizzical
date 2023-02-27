@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import Question from './Question'
 
 const Questions = () => {
-    const [quizData, setQuizData] = useState({score: 0, questions: []})
+    const [quizData, setQuizData] = useState({score: 0, total: 0, questions: []})
     const [hasQuizStarted, setHasQuizStarted] = useState(false)
     const [hasFinishedAnswering, setHasFinishedAnswering] = useState(false)
     const [willPlayAgain, setWillPlayAgain] = useState(false)
@@ -48,7 +48,7 @@ const Questions = () => {
                     choices: [...randomChoices]
                 }
             })
-            const newQuizData = {score: 0, questions: [...filteredData]}
+            const newQuizData = {score: 0, total: filteredData.length, questions: [...filteredData]}
             setQuizData(newQuizData)
         }
         getQuizData()
@@ -70,7 +70,7 @@ const Questions = () => {
         })
         setQuizData(prevState => {
             return {
-                score: prevState.score,
+                ...prevState,
                 questions: [...updatedArray]
             }
         })
@@ -115,17 +115,19 @@ const Questions = () => {
                 } else {
                 }
             })
+
             setQuizData(prevState => {
                 return {
                     ...prevState,
                     score: correctAns
                 }
             })
-            setHasFinishedAnswering(true)
+            const tally = `${correctAns}/${quizData.total}`
+            correctAns > 8 ? 
+                successToast(`🎉 ${tally}. Congrats! You passed.`): 
+                successToast(`${tally} You fell short but, hey! you did your best. 👍`)
 
-            quizData.score > 8 ? 
-                successToast('🎉 Congrats! You passed. 🎉'): 
-                successToast('You fell short but, hey! you did your best. 👍')
+            setHasFinishedAnswering(true)
 
         } else {
             warningToast('Some questions are still unanswered.')
