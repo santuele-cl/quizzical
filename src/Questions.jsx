@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { nanoid } from 'nanoid'
 import { decode } from 'html-entities'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import Question from './Question'
 
 const Questions = () => {
@@ -75,19 +77,32 @@ const Questions = () => {
 
     }
 
-    function handlePlayAgain() {
-        setHasFinishedAnswering(false)
-        setWillPlayAgain(prevState => !prevState)
+    function warningToast(message) {
+        return toast.warning(message, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+    }
+    function successToast(message) {
+        return toast.success(message, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            });
     }
     
     function handleCheckAnswer() {
-        // Checking if all questions has been answered
-        // const arrayOfIsHeld = []
-        // for(let i=0;i<quizData.questions.length;i++) {
-        //     arrayOfIsHeld.push(!quizData.questions[i].choices.every(choice => !choice.isHeld))
-        // }
-        // const isAllQuestionsAsnwered = arrayOfIsHeld.every(isHeld => isHeld)
-        
         const isAllQuestionsAsnwered = quizData.questions.map(question => {
             return !question.choices.every(choice => !choice.isHeld)
         }).every(isHeld => isHeld)
@@ -107,8 +122,13 @@ const Questions = () => {
                 }
             })
             setHasFinishedAnswering(true)
+
+            quizData.score > 8 ? 
+                successToast('🎉 Congrats! You passed. 🎉'): 
+                successToast('You fell short but, hey! you did your best. 👍')
+
         } else {
-            alert('Not all questions are answered!')
+            warningToast('Some questions are still unanswered.')
         }
         
     }
@@ -117,18 +137,34 @@ const Questions = () => {
         return <Question key={item.id} {...item} hasFinishedAnswering={hasFinishedAnswering} handleChoiceClick={handleChoiceClick}/>
     })
     
+    function handleStartClick() {
+        setHasQuizStarted(prevState => !prevState)
+    }
+    
+    function handlePlayAgain() {
+        setHasFinishedAnswering(false)
+        setWillPlayAgain(prevState => !prevState)
+    }
+
     function handleQuitClick() {
         setHasQuizStarted(false)
         setHasFinishedAnswering(false)
         setWillPlayAgain(prevState => !prevState)
     }
-
-    function handleStartClick() {
-        setHasQuizStarted(prevState => !prevState)
-    }
-
     return (       
         <div>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
             <main className='main'>
                 {   hasQuizStarted ?
                     <section className='py-20'>
